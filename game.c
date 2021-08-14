@@ -61,6 +61,7 @@ void FindMine(char mine[ROWS][COLS], char show[ROWS][COLS], int row, int col) {
 	int x = 0;
 	int y = 0;
 	int win = 0;
+	int* w = &win;
 	while (win<row*col-EASY_COUNT) {
 		printf("\nÇëÊäÈëÅÅ²éÀ×µÄ×ø±ê£º>");
 		scanf("%d%d", &x, &y);
@@ -76,9 +77,10 @@ void FindMine(char mine[ROWS][COLS], char show[ROWS][COLS], int row, int col) {
 			//²»²ÈÀ×
 			else if (mine[x][y] == '0') {
 				show[x][y] = get_mine_count(mine, x, y) + '0';
-				OpenMine(mine, show, x, y);
+				OpenMine(mine, show, x, y, w);
 				printf("\n");
 				DisplayBoard(show, row, col);
+				printf("%d\n", win);
 			}
 		}
 		else {
@@ -91,44 +93,46 @@ void FindMine(char mine[ROWS][COLS], char show[ROWS][COLS], int row, int col) {
 	}
 }
 
-void OpenMine(char mine[ROWS][COLS], char show[ROWS][COLS], int x, int y) {
+void OpenMine(char mine[ROWS][COLS], char show[ROWS][COLS], int x, int y, int* win) {
 	if (x >= 1 && x <= ROW && y >= 1 && y <= COL) { // µÝ¹é·ÀÖ¹Ô½½ç
 		if (get_mine_count(mine, x, y) + '0' == '0') {
 			show[x][y] = ' ';
+			(*win)++;
 			if (show[x - 1][y - 1] == '*')
 			{
-				OpenMine(mine, show, x - 1, y - 1);
+				OpenMine(mine, show, x - 1, y - 1, win);
 			}
 			if (show[x - 1][y] == '*')
 			{
-				OpenMine(mine, show, x - 1, y);
+				OpenMine(mine, show, x - 1, y, win);
 			}
 			if (show[x - 1][y + 1] == '*')
 			{
-				OpenMine(mine, show, x - 1, y + 1);
+				OpenMine(mine, show, x - 1, y + 1, win);
 			}
 			if (show[x][y - 1] == '*')
 			{
-				OpenMine(mine, show, x, y - 1);
+				OpenMine(mine, show, x, y - 1, win);
 			}
 			if (show[x][y + 1] == '*')
 			{
-				OpenMine(mine, show, x, y + 1);
+				OpenMine(mine, show, x, y + 1, win);
 			}
 			if (show[x + 1][y - 1] == '*')
 			{
-				OpenMine(mine, show, x + 1, y - 1);
+				OpenMine(mine, show, x + 1, y - 1, win);
 			}
 			if (show[x + 1][y] == '*')
 			{
-				OpenMine(mine, show, x + 1, y);
+				OpenMine(mine, show, x + 1, y, win);
 			}
 			if (show[x + 1][y + 1] == '*')
 			{
-				OpenMine(mine, show, x + 1, y + 1);
+				OpenMine(mine, show, x + 1, y + 1, win);
 			}
 		}
 		else {
+			(*win)++;
 			show[x][y] = get_mine_count(mine, x, y) + '0';
 		}
 	}
